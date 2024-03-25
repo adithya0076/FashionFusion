@@ -1,7 +1,11 @@
 import SwiftUI
 
 struct LoadingScreenView: View {
+    @State var isActive : Bool = false
     var body: some View {
+        if isActive {
+            LoginView()
+        }else{
             VStack {
                 Spacer()
                 Image("logo")
@@ -15,9 +19,21 @@ struct LoadingScreenView: View {
                 
                 Spacer()
             }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    withAnimation {
+                        self.isActive = true
+                    }
+            
         }
+        
+            }
+        }
+    }
 }
 
-#Preview {
-    LoadingScreenView()
+struct LoadingScreenView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoadingScreenView()
+    }
 }

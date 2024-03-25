@@ -41,10 +41,7 @@ struct LoginView: View {
                     
                     
                     
-                    Button(action: {
-                        viewModel.validateUser()
-                        
-                    }, label: {
+                    Button(action: viewModel.login, label: {
                         RoundedRectangle(cornerRadius: 14)
                             .frame(height: 50)
                             .padding(10)
@@ -86,10 +83,9 @@ struct LoginView: View {
                         }
                 }
                 Spacer()
-                NavigationLink("", isActive: $viewModel.succes) {
-                    Text("Hello \(viewModel.username)")
+                NavigationLink(destination: HomeView(), isActive: $viewModel.success) {
+                    EmptyView()
                 }
-                
             }
         }
     }
