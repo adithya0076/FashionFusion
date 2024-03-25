@@ -2,6 +2,35 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct HomeView: View {
+    var body: some View {
+        TabView {
+            HomeViewBase()
+                .badge(10)
+                .tabItem(){
+                    Image(systemName: "house.fill")
+                    Text("Home")
+                }
+            SearchView()
+                .tabItem(){
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
+                }
+            CartView()
+                .tabItem(){
+                    Image(systemName: "cart")
+                    Text("Cart")
+                }
+            ProfileView()
+                .tabItem(){
+                    Image(systemName: "person.circle.fill")
+                    Text("Profile")
+                }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+}
+
+struct HomeViewBase: View {
     @ObservedObject var viewModel = ProductsViewModel()
     @State var columns = Array(repeating: GridItem(.flexible(), spacing: 15), count: 2)
     var body: some View {
@@ -32,10 +61,10 @@ struct HomeView: View {
                     
                     
                 }
+                
             }
-            
         }
-        .navigationBarBackButtonHidden(true)
+        
     }
 }
 
