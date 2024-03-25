@@ -1,6 +1,9 @@
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct HomeView: View {
+    @ObservedObject var viewModel = ProductsViewModel()
+    @State var columns = Array(repeating: GridItem(.flexible(), spacing: 15), count: 2)
     var body: some View {
         ZStack {
             ScrollView{
@@ -11,10 +14,54 @@ struct HomeView: View {
                         .font(.custom("", size: 30))
                         .padding(.horizontal)
                         .padding(.vertical)
+                    
+                    SearchBar()
+                    
+                    ScrollView {
+                        LazyVGrid(columns: self.columns,spacing: 25) {
+                            ForEach(viewModel.products) { product in
+                                ProductTileView(product: product)
+                            }
+                        }
+                        .padding([.horizontal,.top])
+                    }
+                    .navigationBarTitle("Products")
+                    .onAppear {
+                        viewModel.fetchProducts()
+                    }
+                    
+                    
                 }
             }
+            
         }
         .navigationBarBackButtonHidden(true)
+    }
+}
+
+// Product Tile View
+struct ProductTileView: View {
+    let product: Product
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            AnimatedImage(url: URL(string: product.image))
+                .resizable()
+                .frame(width: 150,height: 150)
+                .cornerRadius(15)
+            
+            Text(product.name)
+                .font(.headline)
+                .foregroundColor(.primary)
+            
+            Text("$\(product.price)")
+                .foregroundColor(.secondary)
+        }
+        .frame(width: 150,height: 200)
+        .padding()
+        .background(Color.white)
+        .cornerRadius(8)
+        .shadow(radius: 4)
     }
 }
 
@@ -61,6 +108,52 @@ struct AppBarView: View {
     }
 }
 
+struct SearchBar: View {
+    @State private var searchText: String = ""
+    @State var isSearchActive = false
+
+    var body: some View {
+        HStack {
+            HStack {
+                TextField("Search clothings", text: $searchText)
+                    .padding()
+                    .frame(height: 50)
+                    .background(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.black, lineWidth: 2)
+                    )
+                    .onChange(of: searchText) { newValue in
+                        isSearchActive = !newValue.isEmpty
+                    }
+                
+                if isSearchActive {
+                    Image(systemName: "magnifyingglass")
+                        .padding()
+                        .frame(width: 55, height: 55)
+                        .background(Color.black)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .onTapGesture {
+                            isSearchActive = false
+                            searchText = ""
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                }
+            }
+            .padding(.horizontal)
+            
+            // Other content here
+            
+            NavigationLink(
+                destination: SearchView(),
+                isActive: $isSearchActive,
+                label: { EmptyView() }
+            )
+            .hidden()
+        }
+    }
+}
 
 
 struct TabViewBar: View {
