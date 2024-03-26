@@ -5,7 +5,7 @@ struct HomeView: View {
     var body: some View {
         TabView {
             HomeViewBase()
-                .badge(10)
+
                 .tabItem(){
                     Image(systemName: "house.fill")
                     Text("Home")
@@ -32,6 +32,7 @@ struct HomeView: View {
 
 struct HomeViewBase: View {
     @ObservedObject var viewModel = ProductsViewModel()
+    
     @State var columns = Array(repeating: GridItem(.flexible(), spacing: 15), count: 2)
     var body: some View {
         ZStack {
@@ -64,20 +65,24 @@ struct HomeViewBase: View {
                 
             }
         }
-        
     }
 }
 
 // Product Tile View
 struct ProductTileView: View {
+    @State var show = false
     let product: Product
     
     var body: some View {
         VStack(alignment: .leading) {
-            AnimatedImage(url: URL(string: product.image))
-                .resizable()
-                .frame(width: 150,height: 150)
-                .cornerRadius(15)
+            Button {
+                show.toggle()
+            } label: {
+                AnimatedImage(url: URL(string: product.image))
+                    .resizable()
+                    .frame(width: 150,height: 150)
+                    .cornerRadius(15)
+            }
             
             Text(product.name)
                 .font(.headline)
@@ -91,6 +96,10 @@ struct ProductTileView: View {
         .background(Color.white)
         .cornerRadius(8)
         .shadow(radius: 4)
+        .sheet(isPresented: $show, content: {
+            
+            ProductDetailView(product: product)
+        })
     }
 }
 
