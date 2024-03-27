@@ -2,11 +2,15 @@ import Foundation
 
 class RegisterViewModel: ObservableObject {
 
+    
     @Published var username: String = ""
     @Published var password: String = ""
+    @Published var first_name: String = ""
+    @Published var last_name: String = ""
+    @Published var email: String = ""
     @Published var reenterpassword: String = ""
     @Published var showError : Bool = false
-    @Published var succes : Bool = false
+    @Published var success : Bool = false
     @Published var errorMessage : String = ""
     
     func validateUser(){
@@ -18,25 +22,56 @@ class RegisterViewModel: ObservableObject {
             showError = true
             errorMessage = "Passwords do not match"
         }
-        else if !username.isEmpty && password != reenterpassword {
+        else{
             showError = false
-            succes = true
-        }
-        else {
-            showError = true
-            errorMessage = "Incorrect username and password, please try again"
+            errorMessage = ""
         }
     }
 
-    func login() {
-        RegisterAction(
-            parameters: RegisterRequest(
-                username: username,
-                password: password,
-                reenterpassword: reenterpassword
-            )
-        ).call { _ in
-            // Login successful, navigate to the Home screen
+    func register() {
+        validateUser() // Call validateUser to perform validation
+        
+        // Check if validation succeeded
+        guard !showError else {
+            // Show error message or handle invalid input
+            return
+        }
+        
+        // Validation successful, proceed with login action
+        let loginRequest = RegisterRequest(username: username, password: password, email: email, first_name: first_name, last_name: last_name)
+        let url = URL(string: "http://127.0.0.1:8000/register")!
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let jsonData = try JSONEncoder().encode(loginRequest)
+            request.httpBody = jsonData
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data, error == nil else {
+                    print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                    // Login successful
+                    DispatchQueue.main.async {
+                        self.showError = false
+                        self.success = true
+                        // Navigate to the Home screen
+                    }
+                } else {
+                    // Login failed
+                    DispatchQueue.main.async {
+                        self.showError = true
+                        self.errorMessage = "Incorrect username and password, please try again"
+                    }
+                }
+            }.resume()
+        } catch {
+            print("Error encoding login request: \(error.localizedDescription)")
         }
     }
 }

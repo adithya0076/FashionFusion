@@ -1,18 +1,53 @@
-//
-//  SearchView.swift
-//  ClothesEcommerceApp
-//
-//  Created by Usitha Kodithuwakku Arachchi on 2024-03-25.
-//
-
 import SwiftUI
 
 struct SearchView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    @StateObject var productsViewModel = ProductsViewModel()
+    
+    @State private var gridColumns = Array(repeating: GridItem(.flexible(), spacing: 15), count: 2)
+    @State private var searchText = ""
+    
+    @State private var isAscendingSort = true
+        
+    init(searchTerm: String) {
+        self._searchText = State(initialValue: searchTerm)
     }
-}
-
-#Preview {
-    SearchView()
+    
+    var filteredProducts: [Product] {
+        var filtered = searchText.isEmpty ? productsViewModel.products : productsViewModel.products.filter {
+            $0.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        if isAscendingSort {
+            filtered.sort { $0.price < $1.price }
+        } else {
+            filtered.sort { $0.price > $1.price }
+        }
+        
+        return filtered
+    }
+    
+    var body: some View {
+        NavigationView {
+            VStack {
+                Picker("Sort By", selection: $isAscendingSort) {
+                    Text("Low to High").tag(true)
+                    Text("High to Low").tag(false)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+                
+                ScrollView {
+                    LazyVGrid(columns: gridColumns, spacing: 25) {
+                        ForEach(filteredProducts, id: \.id) { product in
+                            ProductTileView(product: product)
+                                .padding([.horizontal,.top])
+                        }
+                    }
+                    .background(Color.white.edgesIgnoringSafeArea(.all))
+                }
+                .navigationTitle("Search")
+                .searchable(text: $searchText, prompt: "Search Items")
+            }
+        }
+    }
 }

@@ -3,6 +3,10 @@ import Foundation
 class ProductsViewModel: ObservableObject {
     @Published var products: [Product] = []
     
+    init() {
+        fetchProducts()
+    }
+    
     func fetchProducts() {
         guard let url = URL(string: "http://127.0.0.1:8000/items") else { return }
         

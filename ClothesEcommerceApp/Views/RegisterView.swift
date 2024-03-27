@@ -11,64 +11,103 @@ struct RegisterView: View {
                     .frame(width: 300, height: 250)
                     .foregroundStyle(.blue)
                     
-                
-                VStack{
-                    Text("Register").bold().frame(maxWidth: .infinity, alignment: .leading).padding(10)
-                    RoundedRectangle(cornerRadius: 10)
-                    .frame(height: 50)
-                    .padding()
-                    .foregroundColor(.gray.opacity(0.4))
-                    .overlay{
-                        TextField(
-                            "Username",
-                            text: $viewModel.username
-                        )
-                            .padding(.leading, 40)
-                            .textInputAutocapitalization(.never)
-                    }
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 50)
-                        .padding()
-                        .foregroundColor(.gray.opacity(0.4))
-                        .overlay{
-                            SecureField(
-                                    "Password",
-                                    text: $viewModel.password
-                                )
-                                .padding(.leading, 40)
-                                .textInputAutocapitalization(.never)
-                        }
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 50)
-                        .padding()
-                        .foregroundColor(.gray.opacity(0.4))
-                        .overlay{
-                            SecureField(
-                                    "Re-enter Password",
-                                    text: $viewModel.reenterpassword
-                                )
-                                .padding(.leading, 40)
-                                .textInputAutocapitalization(.never)
-                        }
-                    
-                    
-                    Button(action: {
-                        viewModel.validateUser()
+                Text("Register").bold().frame(maxWidth: .infinity, alignment: .leading).padding(10)
+                ScrollView{
+                    VStack{
                         
-                    }, label: {
-                        RoundedRectangle(cornerRadius: 14)
+                        RoundedRectangle(cornerRadius: 10)
+                        .frame(height: 50)
+                        .padding()
+                        .foregroundColor(.gray.opacity(0.4))
+                        .overlay{
+                            TextField(
+                                "Username",
+                                text: $viewModel.username
+                            )
+                                .padding(.leading, 40)
+                                .textInputAutocapitalization(.never)
+                        }
+                        RoundedRectangle(cornerRadius: 10)
+                        .frame(height: 50)
+                        .padding()
+                        .foregroundColor(.gray.opacity(0.4))
+                        .overlay{
+                            TextField(
+                                "Email",
+                                text: $viewModel.email
+                            )
+                                .padding(.leading, 40)
+                                .textInputAutocapitalization(.never)
+                        }
+                        RoundedRectangle(cornerRadius: 10)
+                        .frame(height: 50)
+                        .padding()
+                        .foregroundColor(.gray.opacity(0.4))
+                        .overlay{
+                            TextField(
+                                "First Name",
+                                text: $viewModel.first_name
+                            )
+                                .padding(.leading, 40)
+                                .textInputAutocapitalization(.never)
+                        }
+                        RoundedRectangle(cornerRadius: 10)
+                        .frame(height: 50)
+                        .padding()
+                        .foregroundColor(.gray.opacity(0.4))
+                        .overlay{
+                            TextField(
+                                "Last Name",
+                                text: $viewModel.last_name
+                            )
+                                .padding(.leading, 40)
+                                .textInputAutocapitalization(.never)
+                        }
+                        RoundedRectangle(cornerRadius: 10)
                             .frame(height: 50)
-                            .padding(10)
+                            .padding()
+                            .foregroundColor(.gray.opacity(0.4))
                             .overlay{
-                                Text("Sign Up")
-                                    .foregroundColor(.white)
-                                    
-                            }.tint(.red)
-                    }
+                                SecureField(
+                                        "Password",
+                                        text: $viewModel.password
+                                    )
+                                    .padding(.leading, 40)
+                                    .textInputAutocapitalization(.never)
+                            }
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(height: 50)
+                            .padding()
+                            .foregroundColor(.gray.opacity(0.4))
+                            .overlay{
+                                SecureField(
+                                        "Re-enter Password",
+                                        text: $viewModel.reenterpassword
+                                    )
+                                    .padding(.leading, 40)
+                                    .textInputAutocapitalization(.never)
+                            }
                         
-                    )
+                        
+                        
+                    }
+                    .padding()
                 }
-                .padding()
+                Button(action: {
+                    viewModel.register()
+                    
+                }, label: {
+                    RoundedRectangle(cornerRadius: 14)
+                        .frame(height: 50)
+                        .padding(10)
+                        .overlay{
+                            Text("Sign Up")
+                                .foregroundColor(.white)
+                                
+                        }.tint(.red)
+                }
+                    
+                )
                 Spacer()
                 if viewModel.showError {
                     RoundedRectangle(cornerRadius: 10)
@@ -82,8 +121,8 @@ struct RegisterView: View {
                         }
                 }
                 Spacer()
-                NavigationLink("", isActive: $viewModel.succes) {
-                    Text("Hello \(viewModel.username)")
+                NavigationLink(destination: LoginView(), isActive: $viewModel.success) {
+                    EmptyView()
                 }
                 
             }

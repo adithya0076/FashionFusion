@@ -3,6 +3,8 @@ import SwiftUI
 struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel = LoginViewModel()
     
+    @State var goToRegister = false
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -54,7 +56,7 @@ struct LoginView: View {
                     Text("Or").frame(maxWidth: .infinity, alignment: .center).padding(10)
                     
                     Button(action: {
-                        
+                        goToRegister = true
                         
                     }, label: {
                         RoundedRectangle(cornerRadius: 14)
@@ -66,7 +68,6 @@ struct LoginView: View {
                                     
                             }.tint(.red)
                     }
-                        
                     )
                 }
                 .padding()
@@ -86,8 +87,13 @@ struct LoginView: View {
                 NavigationLink(destination: HomeView(), isActive: $viewModel.success) {
                     EmptyView()
                 }
+                
+                NavigationLink(destination: RegisterView(), isActive: $goToRegister){
+                    EmptyView()
+                }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

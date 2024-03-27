@@ -5,20 +5,14 @@ struct HomeView: View {
     var body: some View {
         TabView {
             HomeViewBase()
-
                 .tabItem(){
                     Image(systemName: "house.fill")
                     Text("Home")
                 }
-            SearchView()
+            SearchView(searchTerm: "")
                 .tabItem(){
                     Image(systemName: "magnifyingglass")
                     Text("Search")
-                }
-            CartView()
-                .tabItem(){
-                    Image(systemName: "cart")
-                    Text("Cart")
                 }
             ProfileView()
                 .tabItem(){
@@ -110,6 +104,8 @@ struct HomeView_Previews: PreviewProvider {
 }
 
 struct AppBarView: View {
+    @State private var isCartViewActive = false
+    @State var goTOCart = false
     var body: some View {
         HStack {
             Button(action: {}) {
@@ -132,7 +128,9 @@ struct AppBarView: View {
             
             Spacer()
             
-            Button(action: {}) {
+            Button(action: {
+                goTOCart = true
+            }) {
                 Image(systemName: "cart")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -141,15 +139,22 @@ struct AppBarView: View {
             .frame(width: 30, height: 30)
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.trailing)
+            
+            NavigationLink(destination: CartView(), isActive: $goTOCart){
+                EmptyView()
+            }
         }
         .padding(.horizontal)
+        
     }
 }
 
 struct SearchBar: View {
     @State private var searchText: String = ""
-    @State var isSearchActive = false
-
+    @State private var isTyping = false
+    @State private var isSearchActive = false
+    private let searchDelay = 5.0 // Adjust the delay as needed
+    
     var body: some View {
         HStack {
             HStack {
@@ -162,62 +167,43 @@ struct SearchBar: View {
                             .stroke(Color.black, lineWidth: 2)
                     )
                     .onChange(of: searchText) { newValue in
-                        isSearchActive = !newValue.isEmpty
+                        isTyping = true
+                        delaySearch()
                     }
                 
-                if isSearchActive {
-                    Image(systemName: "magnifyingglass")
-                        .padding()
-                        .frame(width: 55, height: 55)
-                        .background(Color.black)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .onTapGesture {
-                            isSearchActive = false
-                            searchText = ""
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                        }
+                if isTyping {
+                    Button(action: {
+                        isSearchActive = true
+                        isTyping = false
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                            .padding()
+                            .frame(width: 55, height: 55)
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
                 }
             }
             .padding(.horizontal)
             
-            // Other content here
-            
             NavigationLink(
-                destination: SearchView(),
+                destination: SearchView(searchTerm: searchText),
                 isActive: $isSearchActive,
                 label: { EmptyView() }
             )
             .hidden()
         }
     }
-}
-
-
-struct TabViewBar: View {
-    var body: some View {
-        TabView {
-            HomeView()
-                .badge(10)
-                .tabItem(){
-                    Image(systemName: "house.fill")
-                    Text("Home")
-                }
-            SearchView()
-                .tabItem(){
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
-                }
-            CartView()
-                .tabItem(){
-                    Image(systemName: "cart")
-                    Text("Cart")
-                }
-            ProfileView()
-                .tabItem(){
-                    Image(systemName: "person.circle.fill")
-                    Text("Profile")
-                }
+    
+    private func delaySearch() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + searchDelay) {
+            if isTyping {
+                isSearchActive = true
+                isTyping = false
+            }
         }
     }
 }
+
+

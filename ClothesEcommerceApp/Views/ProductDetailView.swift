@@ -8,9 +8,11 @@ struct ProductDetailView: View {
     @State var goTOCart = false
     let sizes = ["XS", "S", "M", "L", "XL"]
     @State private var showAlert = false
+
     let product: Product
     
     var body: some View {
+        
         var totalPrice: Double {
             if let priceValue = Double(product.price) {
                 return priceValue * Double(quantity)
@@ -18,6 +20,7 @@ struct ProductDetailView: View {
                 return 0 // or handle the error condition as needed
             }
         }
+        
         VStack{
             
             ZStack{
@@ -150,41 +153,44 @@ struct ProductDetailView: View {
                 .padding(.bottom,100)
 
             }
-
-                HStack{
-
-                    HStack{}
-                    Spacer()
-                    
-                    Button(action: {
-                        goTOCart = true
-                       
-                            print("appended")
-
-                        
-                    }, label: {
-                        
-                        Text("Add to Cart")
-                        
-                    })
-                    .padding()
-                    .padding(.horizontal,100)
-                    .background(.orange)
-                    .foregroundColor(.white)
-                    .cornerRadius(20)
-                    .alert(isPresented: $showAlert) {
-                                    Alert(title: Text("Success"), message: Text("Item added to cart successfully"), dismissButton: .default(Text("OK")))
-                                }
-                    Spacer()
-                    HStack{}
-                    
+            HStack {
+                HStack {}
+                Spacer()
+                
+                Button(action: {
+                    goTOCart = true
+                    let newItem = CartItem(cartId: UUID(),pid: product.id, name: product.name, price: totalPrice, quantity: quantity, imageURL: product.image,size: selectedSize,eachPrice: product.price)
+                        cartItems.append(newItem)
+                        showAlert = true
+                }, label: {
+                    Text("Add to Cart")
+                })
+                .padding()
+                .padding(.horizontal, 100)
+                .background(Color.orange)
+                .foregroundColor(.white)
+                .cornerRadius(20)
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Success"), message: Text("Item added to cart successfully"), dismissButton: .default(Text("OK")))
                 }
-                .background(Color.white)
-                .frame(maxHeight: .infinity,alignment: .bottom)
+                Spacer()
+                HStack {}
+            }
+            .background(Color.white)
+            .frame(maxHeight: .infinity,alignment: .bottom)
+        }
+    }
+    .navigationBarTitleDisplayMode(.inline)
+    .onChange(of: goTOCart) { newValue in
+            if newValue {
+                quantity = 1
+                selectedSize = "M"
+                goTOCart = false
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
-        
-        
     }
+    
+  
 }
+
+
