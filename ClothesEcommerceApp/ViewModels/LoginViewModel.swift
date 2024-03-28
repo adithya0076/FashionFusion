@@ -30,8 +30,8 @@ class LoginViewModel: ObservableObject {
         
         // Validation successful, proceed with login action
         let loginRequest = LoginRequest(username: username, password: password)
-//        let url = URL(string: "https://fashionfusionbackend.onrender.com/login")!
-        let url = URL(string: "http://127.0.0.1:8000/login")!
+        let url = URL(string: "https://fashionfusionbackend.onrender.com/login")!
+//        let url = URL(string: "http://127.0.0.1:8000/login")!
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
