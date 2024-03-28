@@ -8,7 +8,7 @@ class ProductsViewModel: ObservableObject {
     }
     
     func fetchProducts() {
-        guard let url = URL(string: "http://127.0.0.1:8000/items") else { return }
+        guard let url = URL(string: "https://fashionfusionbackend.onrender.com/items") else { return }
         
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else {

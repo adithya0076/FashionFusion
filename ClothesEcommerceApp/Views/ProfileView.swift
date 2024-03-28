@@ -1,10 +1,3 @@
-//
-//  ProfileView.swift
-//  ClothesEcommerceApp
-//
-//  Created by Usitha Kodithuwakku Arachchi on 2024-03-25.
-//
-
 import SwiftUI
 
 struct ProfileView: View {
