@@ -39,7 +39,8 @@ class RegisterViewModel: ObservableObject {
         
         // Validation successful, proceed with login action
         let loginRequest = RegisterRequest(username: username, password: password, email: email, first_name: first_name, last_name: last_name)
-        let url = URL(string: "https://fashionfusionbackend.onrender.com/register")!
+//        let url = URL(string: "https://fashionfusionbackend.onrender.com/register")!
+        let url = URL(string: "http://127.0.0.1:8000/register")!
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

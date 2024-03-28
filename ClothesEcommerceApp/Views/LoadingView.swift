@@ -28,6 +28,7 @@ struct LoadingScreenView: View {
         }
         
             }
+            .navigationBarBackButtonHidden(true)
         }
     }
 }

@@ -30,8 +30,8 @@ struct SearchView: View {
         NavigationView {
             VStack {
                 Picker("Sort By", selection: $isAscendingSort) {
-                    Text("Low to High").tag(true)
-                    Text("High to Low").tag(false)
+                    Text("A-Z").tag(true)
+                    Text("Z-A").tag(false)
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()

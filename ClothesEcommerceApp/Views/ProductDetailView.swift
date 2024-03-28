@@ -6,7 +6,7 @@ struct ProductDetailView: View {
     @State private var quantity = 1
     @State var selectedSize: String = "M"
     @State var goTOCart = false
-    let sizes = ["XS", "S", "M", "L", "XL"]
+    let sizes = ["S", "M", "L"]
     @State private var showAlert = false
 
     let product: Product
@@ -17,7 +17,7 @@ struct ProductDetailView: View {
             if let priceValue = Double(product.price) {
                 return priceValue * Double(quantity)
             } else {
-                return 0 // or handle the error condition as needed
+                return 0
             }
         }
         
@@ -77,26 +77,26 @@ struct ProductDetailView: View {
                         }
                         
                     }.padding(.horizontal, 50)
-                        Spacer()
-
-                    
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Qty : ")
-                            HStack {
+    
+                        
+                    HStack{
+                        Text("Qty : ")
+                        HStack(spacing: 10) {
+                            HStack{
+                                
                                 Button(action: {
                                     if quantity > 1 {
-                                        withAnimation {
                                             quantity -= 1
-                                        }
                                     }
-                                }) {
+                                    
+                                }){
                                     Image(systemName: "minus")
-                                        .frame(width: 40, height: 40)
-                                        .background(Color.orange)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
+                                        .padding(.all,8)
                                 }
+                                .frame(width: 30,height: 30)
+                                .overlay(RoundedRectangle(cornerRadius: 50).stroke())
+                                .foregroundStyle(.orange)
+                                
                                 
                                 Text("\(quantity)")
                                     .font(.title2)
@@ -104,37 +104,30 @@ struct ProductDetailView: View {
                                     .padding(.horizontal, 8)
                                 
                                 Button(action: {
-                                    withAnimation {
-                                        quantity += 1
-                                    }
-                                }) {
+                                    quantity += 1
+                                }){
                                     Image(systemName: "plus")
-                                        .frame(width: 40, height: 40)
-                                        .background(Color.orange)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
+                                        .padding(.all,8)
                                 }
+                                .frame(width: 30,height: 30)
+                                .background(Color(.orange))
+                                .clipShape(Circle())
+                                .foregroundStyle(.white)
                                 
-                                Spacer()
-                                
-                                Text("LKR \(totalPrice, specifier: "%.2f")")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                            }
-                            .padding(.horizontal)
+                                    
+                            }.padding(.horizontal)
                         }
-                        .padding(.vertical, 20)
-                    }
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.white.opacity(0.3))
-                            .blur(radius: 20)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.white.opacity(0.5), lineWidth: 1)
-                            )
-                    )
-                    .padding()
+                        
+                    }.padding(.horizontal, 50)
+                    VStack {
+                        Text("LKR \(totalPrice, specifier: "%.2f")")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                    }.padding(.horizontal, 50)
+                    Spacer()
+                    Spacer()
+                    
+                   
 
                     VStack(alignment: .leading){
                         Text("Description")
@@ -146,6 +139,7 @@ struct ProductDetailView: View {
                             .opacity(0.8)
                             .font(.subheadline)
                     }.padding(.horizontal)
+                            .padding(.vertical)
                         
                 }
                 

@@ -7,13 +7,13 @@ struct CartView: View {
     @State private var shippingCost = 0.0
     @State private var totalWithShipping = 0.0
     @State private var showAlert = false
-    
+    @State private var promo: String = ""
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             Text("Shopping Cart")
-                .font(.system(size: 44))
+                .font(.system(size: 24))
                 .fontWeight(.bold)
-                .frame(width: 360, alignment: .leading)
+                .frame(width: 360) // Adjust width as needed
         }
         NavigationView {
             List {
@@ -23,14 +23,31 @@ struct CartView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 60)
+                            .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
                         
                         VStack(alignment: .leading) {
                             Text(item.name)
                                 .font(.headline)
-                                .fontWeight(.bold)
-                            Text("Price: \(String(format: "%.2f", item.price))")
-                            Text("Quantity: \(item.quantity)")
-                            Text("Size: \(item.size)")
+                                .font(.system(size: 12))
+                            
+                            Text("LKR \(String(format: "%.2f", item.price))")
+                                .font(.system(size: 12))
+                            HStack{
+                                Circle()
+                                    .frame(width: 40, height: 40)
+                                    .overlay(
+                                        Text("\(item.quantity)")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                    )
+                                Circle()
+                                    .frame(width: 40, height: 40)
+                                    .overlay(
+                                        Text("\(item.size)")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                    )
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.trailing, 8)
@@ -47,36 +64,44 @@ struct CartView: View {
         Divider()
         
         ZStack {
-            VStack {
-                HStack {
-                    Text("Subtotal")
-                    Spacer()
-                    Text("LKR \(String(format: "%.2f", subTotal))")
-                        .italic()
-                }
-                .padding()
+            VStack(alignment: .center) {
                 
-                HStack {
-                    Text("Shipping")
-                    Spacer()
-                    Text("LKR \(String(format: "%.2f", shippingCost))")
-                        .italic()
-                }
-                .padding()
-                
-                HStack {
+                    Text("Payment")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                HStack{
+            
+                    Text("COD")
+                        .font(.headline)
+                        .font(.system(size: 12))
+                        .padding(10)
+                }.frame(maxWidth: .infinity)
+                    .padding(.trailing, 8)
+                    .background(Color.gray)
+                    .cornerRadius(10)
+                    
+                TextField("Promo Code", text: $promo)
+                    .padding()
+                    .frame(height: 50)
+                    .background(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.black, lineWidth: 2)
+                    )
+                   
+               
                     Text("Total")
                         .font(.title2)
                         .fontWeight(.bold)
-                    Spacer()
+                    
                     Text("LKR \(String(format: "%.2f", totalWithShipping))")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.orange)
-                }
-                .padding()
+                
+              
             }
-            .padding(.bottom, 50)
+            .padding(.bottom, 60)
             .padding(.horizontal, 12)
             
             VStack {
